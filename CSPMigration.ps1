@@ -26,3 +26,12 @@ Select-AzureRmSubscription -SubscriptionName $subs[1].Name
         if($RGCheck -eq $false)
             {Add-AzureRmResourceGroup -Name $RG.ResourceGroupName -Location $RG.Location}   
     }
+
+#Move Resources from Old Subscription to New Subscription#
+Select-AzureRmSubscription -SubscriptionName $subs[0].Name
+$oldRSG = Get-AzureRmResourceGroup
+$Resources = Get-AzureRmResource | Where {$_.ResourceGroupName -eq "TEST-CLIENTGW"}
+    foreach($Resource in $Resources){
+        Move-AzureRmResource -ResourceId $Resource.ResourceId -DestinationSubscriptionId $subs.SubscriptionID[1] -DestinationResourceGroupName $RSG.ResourceGroupName
+    }
+        
